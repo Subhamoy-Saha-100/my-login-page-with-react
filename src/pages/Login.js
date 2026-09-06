@@ -6,12 +6,41 @@ import { Link } from 'react-router-dom';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const handleSubmit = (e) => {   
-        e.preventDefault();
-        console.log('Email:', email);
-        console.log('Password:', password);
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      console.log("Email:", email);
+      console.log("Password:", password);
+      try {
+        const response = await fetch("http://localhost:5000/api/auth/login", {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        });
+
+        const data = await response.json();
+
+        console.log("Backend response:", data);
+
+        if (!response.ok) {
+          alert(data.message);
+          return;
+        }
+
+        alert("Login successful!");
+      } catch (error) {
+        console.error("Login error:", error);
+        alert("Unable to connect to server");
+      }
     };
 
+    
     return (
         <div className="login-page">
             <div className='login-card'>
